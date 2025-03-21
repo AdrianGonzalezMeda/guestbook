@@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
         ]);
     }
 
-    #[Route('/conference/{id}', name: 'conferenceDetail')]
+    #[Route('/conference/{slug}', name: 'conferenceDetail')]
     public function detail(Request $request, Conference $conference, CommentRepository $commentRepository): Response
     {
 
