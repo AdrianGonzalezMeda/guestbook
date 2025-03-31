@@ -11,11 +11,11 @@
     <div>There are {{ comments|length }} comments.</div>
     
 		{% for comment in comments %}
-        {#
+        
 			{% if comment.photofilename %}
 				<img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px"/>
 			{% endif %}
-        #}
+        
 			<h4>{{ comment.author }}</h4>
 			
 			<small>
@@ -34,4 +34,8 @@
 	{% else %}
 		<div>No comments have been posted yet for this conference.</div>
 	{% endif %}
+
+    <h2>Add your own feeback</h2>
+
+    {{ form(comment_form) }}
 {% endblock %}
