@@ -38,9 +38,11 @@ final class ConferenceController extends AbstractController
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setConference($conference);
             $photo = $form['photo']->getData();
+            
             if ($photo) {
                 $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
                 $photo->move($photoDir, $filename);
