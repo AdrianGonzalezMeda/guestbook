@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Api\Client\SpamChecker;
 use App\Entity\Comment;
 use App\Entity\Conference;
 use App\Form\CommentType;
@@ -33,6 +34,7 @@ final class ConferenceController extends AbstractController
         Request $request,
         Conference $conference,
         CommentRepository $commentRepository,
+        SpamChecker $spamChecker,
         #[Autowire('%photo_dir%')] string $photoDir
     ): Response {
         $comment = new Comment();
@@ -50,6 +52,17 @@ final class ConferenceController extends AbstractController
             }
 
             $this->entityManager->persist($comment);
+
+            $context = [
+                'user_ip' => $request->getClientIp(),
+                'user_agent' => $request->headers->get('user-agent'),
+                'referrer' => $request->headers->get('referer'),
+                'permalink' => $request->getUri(),
+            ];
+            if (2 === $spamChecker->getSpamScore($comment, $context)) {
+                throw new \RuntimeException('Blatant spam, go away!');
+            }
+
             $this->entityManager->flush();
 
             return $this->redirectToRoute('conferenceDetail', ['slug' => $conference->getSlug()]);
