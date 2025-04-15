@@ -25,7 +25,7 @@ class ConferenceControllerTest extends WebTestCase
             'comment[author]' => 'Fabien',
             'comment[text]' => 'Some feedback from an automated functional test',
             'comment[email]' => $email = 'me@automat.ed',
-            'comment[photo]' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
+            'comment[photo]' => dirname(__DIR__, 2) . '/public/images/under-construction.gif',
         ]);
         $this->assertResponseRedirects();
 
@@ -37,7 +37,7 @@ class ConferenceControllerTest extends WebTestCase
         $client->followRedirect();
         $this->assertSelectorExists('div:contains("There are 2 comments")');
     }
-    
+
     public function testConferencePage()
     {
         $client = static::createClient();
