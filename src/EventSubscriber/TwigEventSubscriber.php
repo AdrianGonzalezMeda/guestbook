@@ -26,6 +26,12 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        return [];
+        /* This subscriber its no longer used. Because we use the cache instead, creating a new
+        route to render the header with the conferences. Enabling the ESI (Edge Side Includes)
+        to have diferent cache solutions fot specific parts of the page.
+        The route is /conference_header and the template is conference/header.html.twig. 
+        */
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
         ];
