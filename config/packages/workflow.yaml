@@ -9,37 +9,37 @@ framework:
                 property: 'state'
             supports:
                 - App\Entity\Comment
-            initial_marking: submitted
+            initial_marking: '%comment.status.submitted%'
             places:
-                - submitted
-                - ham
-                - potential_spam
-                - spam
-                - rejected
-                - ready
-                - published
+                - '%comment.status.submitted%'
+                - '%comment.status.ham%'
+                - '%comment.status.potential_spam%'
+                - '%comment.status.spam%'
+                - '%comment.status.rejected%'
+                - '%comment.status.ready%'
+                - '%comment.status.published%'
             transitions:
                 accept:
-                    from: submitted
-                    to:   ham
+                    from: '%comment.status.submitted%'
+                    to:   '%comment.status.ham%'
                 might_be_spam:
-                    from: submitted
-                    to:   potential_spam
+                    from: '%comment.status.submitted%'
+                    to:   '%comment.status.potential_spam%'
                 reject_spam:
-                    from: submitted
-                    to:   spam
+                    from: '%comment.status.submitted%'
+                    to:   '%comment.status.spam%'
                 publish:
-                    from: potential_spam
-                    to:   ready
+                    from: '%comment.status.potential_spam%'
+                    to:   '%comment.status.ready%'
                 reject:
-                    from: potential_spam
-                    to:   rejected
+                    from: '%comment.status.potential_spam%'
+                    to:   '%comment.status.rejected%'
                 publish_ham:
-                    from: ham
-                    to:   ready
+                    from: '%comment.status.ham%'
+                    to:   '%comment.status.ready%'
                 reject_ham:
-                    from: ham
-                    to:   rejected
+                    from: '%comment.status.ham%'
+                    to:   '%comment.status.rejected%'
                 optimize:
-                    from: ready
-                    to:   published
+                    from: '%comment.status.ready%'
+                    to:   '%comment.status.published%'

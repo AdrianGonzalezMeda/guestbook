@@ -10,6 +10,9 @@ parameters:
     default_base_url: 'http://127.0.0.1'
     router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
+imports:
+    - { resource: packages/parameters/comment_workflow.yaml }
+
 services:
     # default configuration for services in *this* file
     _defaults:

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Base\Constant\CommentWorkflow;
 use App\Entity\Comment;
 use App\Message\CommentMessage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,10 +30,10 @@ class AdminController extends AbstractController
     {
         $accepted = !$request->query->get('reject');
 
-        if ($commentStateMachine->can($comment, 'publish')) {
-            $transition = $accepted ? 'publish' : 'reject';
-        } elseif ($commentStateMachine->can($comment, 'publish_ham')) {
-            $transition = $accepted ? 'publish_ham' : 'reject_ham';
+        if ($commentStateMachine->can($comment, CommentWorkflow::TRANSITION_PUBLISH)) {
+            $transition = $accepted ? CommentWorkflow::TRANSITION_PUBLISH : CommentWorkflow::TRANSITION_REJECT;
+        } elseif ($commentStateMachine->can($comment, CommentWorkflow::TRANSITION_PUBLISH_HAM)) {
+            $transition = $accepted ? CommentWorkflow::TRANSITION_PUBLISH_HAM : CommentWorkflow::TRANSITION_REJECT_HAM;
         } else {
             return new Response('Comment already reviewed or not in the right state.');
         }

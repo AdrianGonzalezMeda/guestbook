@@ -1,0 +1,22 @@
+# config/packages/parameters/comment.yaml
+parameters:
+    # The status names are defined in the workflow configuration and should match the constants in the CommentWorkflow enum.
+    # These constants are used to define the states in the workflow configuration.
+    comment.status.submitted: !php/const App\Base\Constant\CommentWorkflow::STATUS_SUBMITTED
+    comment.status.ham: !php/const App\Base\Constant\CommentWorkflow::STATUS_HAM
+    comment.status.potential_spam: !php/const App\Base\Constant\CommentWorkflow::STATUS_POTENTIAL_SPAM
+    comment.status.spam: !php/const App\Base\Constant\CommentWorkflow::STATUS_SPAM
+    comment.status.rejected: !php/const App\Base\Constant\CommentWorkflow::STATUS_REJECTED
+    comment.status.ready: !php/const App\Base\Constant\CommentWorkflow::STATUS_READY
+    comment.status.published: !php/const App\Base\Constant\CommentWorkflow::STATUS_PUBLISHED
+    
+    # The transition names are defined in the workflow configuration and should match the constants in the CommentWorkflow enum.
+    # These constants are used to define the transitions in the workflow configuration.
+    comment.transition.accept: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_ACCEPT
+    comment.transition.might_be_spam: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_MIGHT_BE_SPAM
+    comment.transition.reject_spam: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_REJECT_SPAM
+    comment.transition.publish: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_PUBLISH
+    comment.transition.reject: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_REJECT
+    comment.transition.publish_ham: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_PUBLISH_HAM
+    comment.transition.reject_ham: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_REJECT_HAM
+    comment.transition.optimize: !php/const App\Base\Constant\CommentWorkflow::TRANSITION_OPTIMIZE
