@@ -6,14 +6,15 @@ use App\Api\Client\SpamChecker as ClientSpamChecker;
 use App\Base\Constant\CommentWorkflow;
 use App\Base\Services\ImageOptimizer;
 use App\Message\CommentMessage;
+use App\Notification\CommentReviewNotification;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsMessageHandler]
@@ -25,9 +26,9 @@ class CommentMessageHandler
         private CommentRepository $commentRepository,
         private MessageBusInterface $bus,
         private WorkflowInterface $commentStateMachine,
-        private MailerInterface $mailer,
-        private ImageOptimizer $imageOptimizer,
+        private NotifierInterface $notifier,
         #[Autowire('%admin_email%')] private string $adminEmail,
+        private ImageOptimizer $imageOptimizer,
         #[Autowire('%photo_dir%')] private string $photoDir,
         private ?LoggerInterface $logger = null,
     ) {}
@@ -54,13 +55,8 @@ class CommentMessageHandler
             $this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_PUBLISH)
             || $this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_PUBLISH_HAM)
         ) {
-            $this->mailer->send((new NotificationEmail())
-                    ->subject('New comment posted')
-                    ->htmlTemplate('emails/comment_notification.html.twig')
-                    ->from($this->adminEmail)
-                    ->to($this->adminEmail)
-                    ->context(['comment' => $comment])
-            );
+            $recipient = new Recipient($this->adminEmail);
+            $this->notifier->send(new CommentReviewNotification($comment), $recipient);
         } elseif ($this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_OPTIMIZE)) {
             if ($comment->getPhotoFilename()) {
                 $this->imageOptimizer->resize($this->photoDir . '/' . $comment->getPhotoFilename());

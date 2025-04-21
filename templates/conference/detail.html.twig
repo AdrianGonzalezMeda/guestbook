@@ -3,6 +3,8 @@
 {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
 {% block body %}
+    {% include 'ui/notification/notification.html.twig' %}
+
     <h2 class="mb-5">
         {{ conference }} Conference
     </h2>
