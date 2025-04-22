@@ -36,7 +36,7 @@ class CommentMessageHandler
     public function __invoke(CommentMessage $message)
     {
         $comment = $this->commentRepository->find($message->getId());
-        $this->logger?->debug('can accept?', ['data' => $this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_ACCEPT)]);
+        
         if (!$comment) {
             return;
         }
@@ -56,7 +56,10 @@ class CommentMessageHandler
             || $this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_PUBLISH_HAM)
         ) {
             $recipient = new Recipient($this->adminEmail);
-            $this->notifier->send(new CommentReviewNotification($comment), $recipient);
+            $this->notifier->send(
+                new CommentReviewNotification($comment, $message->getReviewUrl()),
+                $recipient
+            );
         } elseif ($this->commentStateMachine->can($comment, CommentWorkflow::TRANSITION_OPTIMIZE)) {
             if ($comment->getPhotoFilename()) {
                 $this->imageOptimizer->resize($this->photoDir . '/' . $comment->getPhotoFilename());
